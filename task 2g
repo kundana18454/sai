@@ -1,0 +1,22 @@
+from django.test import TestCase
+from .models import Product  # Replace with your product model path
+from .factories import ProductFactory  # Assuming you have a factories.py file
+
+
+class TestProductModel(TestCase):
+    """Tests for the Product model."""
+
+    def test_can_find_available_products(self):
+        """Tests if products can be retrieved based on availability."""
+
+        # Create products with different stock levels
+        available_product = ProductFactory.create(stock=10)
+        unavailable_product = ProductFactory.create(stock=0)
+
+        # Find available products (assuming a stock field for availability)
+        available_products = Product.objects.filter(stock__gt=0)
+
+        # Check if only the available product is retrieved
+        self.assertEqual(len(available_products), 1)
+        self.assertIn(available_product, available_products)
+        self.assertNotIn(unavailable_product, available_products)
