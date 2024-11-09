@@ -1,0 +1,12 @@
+from django.views.generic import DetailView
+
+from .models import MyModel
+
+class MyModelDetailView(DetailView):
+    model = MyModel
+    template_name = "my_model_detail.html"  # Optional for template rendering
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add any additional context data here
+        return context
