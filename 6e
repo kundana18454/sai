@@ -1,0 +1,6 @@
+Feature: Searching Products by Category
+
+  Scenario: Search Products by Category
+    Given a category "Electronics" exists
+    When I request to search products by category "Electronics"
+    Then a list of products belonging to the "Electronics" category should be returned
