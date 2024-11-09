@@ -1,0 +1,22 @@
+from django.test import TestCase
+from .models import Product  # Replace with your product model path
+from .factories import ProductFactory  # Assuming you have a factories.py file
+
+
+class TestProductModel(TestCase):
+    """Tests for the Product model."""
+
+    def test_can_list_all_products(self):
+        """Tests if all created products can be retrieved."""
+        # Create multiple products (adjust the count as needed)
+        products = ProductFactory.create_batch(size=3)
+
+        # Retrieve all products using the model manager
+        all_products = Product.objects.all()
+
+        # Check if the number of retrieved products matches the created ones
+        self.assertEqual(len(all_products), len(products))
+
+        # Optionally, verify specific fields of some retrieved products
+        for product in all_products:
+            self.assertIn(product, products)  # Check if each retrieved product is in the created list
