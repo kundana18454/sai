@@ -1,0 +1,29 @@
+from django.shortcuts import render, redirect
+
+from .models import MyModel
+
+def my_model_update_get(request, pk):
+    try:
+        my_model = MyModel.objects.get(pk=pk)
+    except MyModel.DoesNotExist:
+        # Handle object not found case
+        return redirect("error_page")
+
+    context = {"my_model": my_model}
+    return render(request, "my_model_update.html", context)
+
+def my_model_update_post(request, pk):
+    try:
+        my_model = MyModel.objects.get(pk=pk)
+    except MyModel.DoesNotExist:
+        # Handle object not found case
+        return redirect("error_page")
+
+    if request.method == "POST":
+        form = MyModelForm(request.POST, instance=my_model)
+        if form.is_valid():
+            form.save()
+            return redirect("model_detail", pk=pk)
+
+    context = {"form": form}
+    return render(request, "my_model_update.html", context)
