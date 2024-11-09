@@ -1,0 +1,6 @@
+Feature: Searching Products by Name
+
+  Scenario: Search Products by Name
+    Given a product with name "Laptop" exists
+    When I request to search for products with the keyword "Laptop"
+    Then a list of products containing the word "Laptop" in their name should be returned
