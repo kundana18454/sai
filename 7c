@@ -1,0 +1,21 @@
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
+
+def verify_text_not_present(driver, expected_text):
+  """Verifies if the provided text is NOT present on the webpage.
+
+  Args:
+    driver: The WebDriver instance.
+    expected_text: The text you expect to be absent from the page.
+  """
+  try:
+    WebDriverWait(driver, 5).until(
+        EC.presence_of_element_located((By.XPATH, f"//*[text()='{expected_text}']"))
+    )
+    print(f"Error: Text '{expected_text}' found on the page, but expected it to be absent!")
+  except TimeoutException:
+    print(f"Text '{expected_text}' not found on the page as expected!")
+  except NoSuchElementException:
+    print(f"Text '{expected_text}' not found on the page as expected!")
