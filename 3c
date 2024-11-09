@@ -1,0 +1,26 @@
+from django.test import TestCase
+from django.urls import reverse
+
+# Assuming models.py has a Product model and views.py has a product_delete view
+from .models import Product
+from .views import product_delete
+
+class ProductDeleteViewTest(TestCase):
+    def setUp(self):
+        self.product = Product.objects.create(
+            name="Product to Delete",
+            price=19.99,
+        )
+
+    def test_can_delete_product_via_view(self):
+        url = reverse("product_delete", kwargs={"pk": self.product.pk})
+
+        # Simulate a DELETE request
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, 302)  # Expected redirect after deletion
+        self.assertRedirects(response, reverse("product_list"))  # Redirect path (adjust as needed)
+
+        # Verify product deletion (using exception or existence check)
+        with self.assertRaises(Product.DoesNotExist):
+            Product.objects.get(pk=self.product.pk)
