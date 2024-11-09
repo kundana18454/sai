@@ -1,0 +1,25 @@
+from django.test import TestCase
+from .models import Product, Category  # Replace with your model paths
+from .factories import ProductFactory  # Assuming you have a factories.py file
+
+
+class TestProductModel(TestCase):
+    """Tests for the Product model."""
+
+    def test_can_find_product_by_category(self):
+        """Tests if products can be retrieved by their category."""
+
+        # Create a category (assuming a Category model exists)
+        category = Category.objects.create(name="Electronics")
+
+        # Create products with the same category
+        product1 = ProductFactory.create(category=category)
+        product2 = ProductFactory.create(category=category)
+
+        # Find products belonging to the created category
+        found_products = Product.objects.filter(category=category)
+
+        # Check if both created products are retrieved
+        self.assertEqual(len(found_products), 2)
+        self.assertIn(product1, found_products)
+        self.assertIn(product2, found_products)
