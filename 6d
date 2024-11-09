@@ -1,0 +1,5 @@
+Feature: Listing Products
+
+  Scenario: List All Products
+    When I request to list all products
+    Then a list of all products should be returned
