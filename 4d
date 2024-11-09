@@ -1,0 +1,28 @@
+from django.views.generic import ListView
+
+class MyModelListView(ListView):
+    model = MyModel
+    paginate_by = 10  # Optional: Pagination per page (adjust as needed)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        # Filter logic based on request parameters (adjust as needed)
+        name_filter = self.request.GET.get('name')
+        category_filter = self.request.GET.get('category')
+        available_filter = self.request.GET.get('available')
+
+        if name_filter:
+            queryset = queryset.filter(name__icontains=name_filter)  # Case-insensitive filtering
+
+        if category_filter:
+            queryset = queryset.filter(category__pk=category_filter)  # Assuming category is a foreign key
+
+        if available_filter:
+            # Adjust filtering based on your availability field (e.g., stock)
+            if available_filter == 'true':
+                queryset = queryset.filter(stock__gt=0)  # Assuming stock > 0 for availability
+            elif available_filter == 'false':
+                queryset = queryset.filter(stock=0)
+
+        return queryset
