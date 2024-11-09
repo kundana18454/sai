@@ -1,0 +1,6 @@
+Feature: Searching Products by Availability
+
+  Scenario: Search Products by Availability
+    Given some products are in stock and some are out of stock
+    When I request to search for products that are in stock
+    Then a list of products that are currently available should be returned
