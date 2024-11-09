@@ -1,0 +1,6 @@
+Feature: Deleting a Product
+
+  Scenario: Delete a Product
+    Given a product with ID "123" exists
+    When I request to delete the product with ID "123"
+    Then the product should be deleted successfully
