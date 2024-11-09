@@ -1,0 +1,38 @@
+from django.core.management.base import BaseCommand
+from django.core.files.uploadedfile import SimpleUploadedFile
+from .models import Product  # Assuming a Product model
+
+import csv  # Example for CSV data
+
+class Command(BaseCommand):
+    help = "Loads product data from a CSV file"
+
+    def add_arguments(self, parser):
+        parser.add_argument("--file", type=str, help="Path to the CSV file")
+
+    def handle(self, *args, **options):
+        file_path = options.get("file")
+
+        if not file_path:
+            self.stdout.write("Error: Please specify a file path.")
+            return
+
+        try:
+            with open(file_path, newline='') as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    # Create a product object with data from each row
+                    product = Product.objects.create(
+                        name=row["name"],
+                        price=row["price"],
+                        # Add more product fields as needed
+                    )
+                    # Optionally handle images using SimpleUploadedFile
+                    if row.get("image_url"):
+                        image_response = requests.get(row["image_url"])
+                        product.image.save(f"product_{product.pk}.jpg", SimpleUploadedFile(
+                            f"product_{product.pk}.jpg", image_response.content, content_type="image/jpeg"))
+                    product.save()
+            self.stdout.write("Products loaded successfully!")
+        except FileNotFoundError:
+            self.stdout.write(f"Error: File not found: {file_path}")
