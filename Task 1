@@ -1,0 +1,29 @@
+from faker import Faker
+import factory
+from factory.django import DjangoModelFactory
+
+from .models import Product  # Replace with your product model path
+
+fake = Faker()
+
+
+class ProductFactory(DjangoModelFactory):
+    """Factory for creating fake Product objects."""
+
+    class Meta:
+        model = Product
+
+    name = factory.LazyFunction(lambda: fake.commerce.product_name())
+    description = factory.LazyFunction(lambda: fake.text(200))
+    price = factory.Decimal(min_value=0.01, max_value=999.99)
+    stock = factory.Faker('pyint', min_value=0, max_value=100)
+    image = factory.Optional(factory.django.ImageField(filename='default.jpg'))
+    category = factory.Faker('pyint', min_value=1, max_value=10)  # Assuming category is an integer field
+    # Add more fields as needed
+
+    @factory.lazy_attribute
+    def discount(self):
+        """Optionally generate a discount between 0% and 50%."""
+        if fake.boolean(chance_of_getting_true=20):  # 20% chance of discount
+            return round(fake.random.uniform(0, 0.5), 2)  # Discount between 0 and 50%
+        return None
