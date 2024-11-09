@@ -1,0 +1,20 @@
+from django.test import TestCase
+from .models import Product  # Replace with your product model path
+from .factories import ProductFactory  # Assuming you have a factories.py file
+
+
+class TestProductModel(TestCase):
+    """Tests for the Product model."""
+
+    def test_can_find_product_by_name(self):
+        """Tests if a product can be retrieved by its exact name."""
+        product_name = "Unique Product Name"
+
+        # Create a product with a unique name
+        product = ProductFactory.create(name=product_name)
+
+        # Find the product by its name using exact match
+        found_product = Product.objects.get(name=product_name)
+
+        # Assert that the retrieved product matches the created one
+        self.assertEqual(product, found_product)
