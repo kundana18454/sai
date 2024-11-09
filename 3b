@@ -1,0 +1,31 @@
+from django.test import TestCase
+from django.urls import reverse  # To generate URLs from view names
+
+# Assuming models.py has a Product model and views.py has a product_update view
+from .models import Product
+from .views import product_update
+
+class ProductUpdateViewTest(TestCase):
+    def setUp(self):
+        self.product = Product.objects.create(
+            name="Original Product Name",
+            price=10.99,
+        )
+        self.updated_data = {
+            "name": "Updated Product Name",
+            "price": 12.50,
+        }
+
+    def test_can_update_product_via_view(self):
+        url = reverse("product_update", kwargs={"pk": self.product.pk})
+
+        # Simulate a POST request with updated data
+        response = self.client.post(url, data=self.updated_data)
+
+        self.assertEqual(response.status_code, 302)  # Expected redirect after successful update
+        self.assertRedirects(response, reverse("product_detail", kwargs={"pk": self.product.pk}))
+
+        # Verify update in database (optional)
+        updated_product = Product.objects.get(pk=self.product.pk)
+        self.assertEqual(updated_product.name, self.updated_data["name"])
+        self.assertEqual(updated_product.price, self.updated_data["price"])
