@@ -1,0 +1,17 @@
+from django.test import TestCase
+from .models import Product  # Replace with your product model path
+from .factories import ProductFactory  # Assuming you have a factories.py file
+
+
+class TestProductModel(TestCase):
+    """Tests for the Product model."""
+
+    def test_can_read_product(self):
+        """Tests if a product can be created and retrieved successfully."""
+        product = ProductFactory.create()
+
+        # Retrieve the product using its primary key (id)
+        retrieved_product = Product.objects.get(pk=product.pk)
+
+        self.assertEqual(product, retrieved_product)  # Check if retrieved product matches the created one
+        self.assertEqual(product.name, retrieved_product.name)  # Test specific field values
