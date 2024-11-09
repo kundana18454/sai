@@ -1,0 +1,11 @@
+from django.views.generic import DeleteView
+
+from .models import MyModel
+
+class MyModelDeleteView(DeleteView):
+    model = MyModel
+    success_url = "model_list"  # Redirect URL after successful deletion
+
+    def get(self, request, *args, **kwargs):
+        # Optionally handle confirmation logic here (e.g., render a confirmation page)
+        return super().get(request, *args, **kwargs)
