@@ -1,0 +1,7 @@
+
+Feature: Reading a Product
+
+  Scenario: Read a Product
+    Given a product with ID "123" exists
+    When I request to read the product with ID "123"
+    Then the product details should be returned
