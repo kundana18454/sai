@@ -1,0 +1,23 @@
+from django.test import TestCase
+from .models import Product  # Replace with your product model path
+from .factories import ProductFactory  # Assuming you have a factories.py file
+
+
+class TestProductModel(TestCase):
+    """Tests for the Product model."""
+
+    def test_can_update_product(self):
+        """Tests if a product can be updated and the changes are reflected."""
+        product = ProductFactory.create(name="Old Name")
+
+        # Update the product's name
+        product.name = "New Name"
+        product.save()
+
+        # Refresh the product object from the database (optional)
+        product.refresh_from_db()
+
+        # Retrieve the updated product
+        updated_product = Product.objects.get(pk=product.pk)
+
+        self.assertEqual(updated_product.name, "New Name")  # Assert the name is updated
