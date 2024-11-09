@@ -1,0 +1,37 @@
+from django.test import TestCase
+from django.urls import reverse  # To generate URLs from view names
+
+from .models import Product, Category  # Assuming Category model
+from .views import product_list
+
+class ProductListViewTest(TestCase):
+    def setUp(self):
+        self.category1 = Category.objects.create(name="Electronics")
+        self.category2 = Category.objects.create(name="Clothing")
+
+        self.product1 = Product.objects.create(
+            name="Product A",
+            price=10.99,
+            category=self.category1,
+        )
+        self.product2 = Product.objects.create(
+            name="Product B",
+            price=12.50,
+            category=self.category2,
+        )
+
+    def test_can_list_products_by_category(self):
+        url = reverse("product_list")  # Get the URL for the product list view
+
+        # Simulate a GET request with category filter parameter
+        response = self.client.get(url, data={"category": self.category1.pk})
+
+        self.assertEqual(response.status_code, 200)  # Expect successful response
+
+        # Verify only matching products are in the context
+        self.assertEqual(len(response.context['object_list']), 1)
+        self.assertEqual(response.context['object_list'][0], self.product1)
+
+        # Optionally, check if product names appear in the response content
+        self.assertContains(response.content, b"Product A")
+        self.assertNotContains(response.content, b"Product B")  # Verify absence
