@@ -1,0 +1,10 @@
+Feature: Updating a Product
+
+  Scenario: Update a Product
+    Given a product with ID "123" exists
+    When I request to update the product with ID "123" with new details:
+      | Field      | New Value |
+      | Name       | Updated Name |
+      | Description| Updated Description |
+      | Price      | 19.99     |
+    Then the product details should be updated successfully
