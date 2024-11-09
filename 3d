@@ -1,0 +1,26 @@
+from django.test import TestCase
+from django.urls import reverse  # To generate URLs from view names
+
+from .models import Product
+from .views import product_list
+
+class ProductListViewTest(TestCase):
+    def setUp(self):
+        # Create multiple products for testing
+        Product.objects.create_batch(size=3)  # Create 3 products
+
+    def test_can_list_all_products(self):
+        url = reverse("product_list")  # Get the URL for the product list view
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)  # Expect successful response
+
+        # Verify the number of products in the response context (adjust as needed)
+        self.assertEqual(len(response.context['object_list']), 3)
+
+        # Optionally, check if specific data is present in the response content
+        # (if your view uses templates for rendering)
+        self.assertContains(response.content, b"Product 1")  # Assuming product names
+        self.assertContains(response.content, b"Product 2")
+        self.assertContains(response.content, b"Product 3")
